@@ -26,7 +26,7 @@ requires = [
     ]
 
 setup(name='autorerun',
-      version='0.1.5',
+      version='0.1.0',
       description='autorerun',
       long_description=""" Starts and automatically restarts a given command if certain files change. Good for development to rerun server when code is changed. """,
       classifiers=[
