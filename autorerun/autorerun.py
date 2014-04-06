@@ -35,12 +35,20 @@ class RestartSubProcessEvent(FileSystemEventHandler):
         self.restart()
     
     def restart(self):
-        if self.process is not None and self.process.poll() == None:
-            logging.info("Killing old process.")
-            self.process.kill()
+        self.kill()
         logging.info("Running %s" % (" ".join(self.command)))
         self.process = subprocess.Popen(self.command)
             
+    def kill(self):
+        if self.process is not None and self.process.poll() == None:
+            logging.info("Terminating old process.")
+            self.process.terminate()
+            time.sleep(0.5)
+            if self.process.poll() == None:
+                logging.info("Killing old process.")
+                self.process.kill()
+        
+    
     def on_moved(self, event):
         super(RestartSubProcessEvent, self).on_moved(event)
 
@@ -95,5 +103,8 @@ def main():
             time.sleep(0.1)
     except KeyboardInterrupt:
         observer.stop()
+    
+    event_handler.kill()
+    
     observer.join()
     
